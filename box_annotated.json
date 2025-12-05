@@ -1,0 +1,31 @@
+{
+    "image_width": 612,
+    "image_height": 495,
+    "count_objects": 3,
+    "predictions": [
+        {
+            "class": "cardboard box",
+            "accuracy": 0.95703125,
+            "x": 456.0,
+            "y": 358.0,
+            "width": 232.0,
+            "height": 214.0
+        },
+        {
+            "class": "cardboard box",
+            "accuracy": 0.94970703125,
+            "x": 268.0,
+            "y": 137.0,
+            "width": 318.0,
+            "height": 212.0
+        },
+        {
+            "class": "cardboard box",
+            "accuracy": 0.9013671875,
+            "x": 226.0,
+            "y": 333.5,
+            "width": 320.0,
+            "height": 239.0
+        }
+    ]
+}
