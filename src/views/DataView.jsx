@@ -2,6 +2,36 @@ import React from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 import { Trash2, RefreshCw } from 'lucide-react';
+import boxesImage from '../assets/boxes_a.jpg';
+
+const ImageCell = ({ image, fallback }) => {
+    const [url, setUrl] = React.useState(null);
+
+    React.useEffect(() => {
+        if (image instanceof Blob || image instanceof File) {
+            const objectUrl = URL.createObjectURL(image);
+            setUrl(objectUrl);
+            return () => URL.revokeObjectURL(objectUrl);
+        } else if (typeof image === 'string') {
+            setUrl(image);
+        } else {
+            setUrl(fallback);
+        }
+    }, [image, fallback]);
+
+    return (
+        <img
+            src={url || fallback}
+            alt="Scan"
+            style={{
+                width: '40px',
+                height: '40px',
+                objectFit: 'cover',
+                borderRadius: 'var(--radius-sm)'
+            }}
+        />
+    );
+};
 
 const DataView = () => {
     const scans = useLiveQuery(() => db.scans.toArray());
@@ -40,6 +70,7 @@ const DataView = () => {
                         <thead style={{ backgroundColor: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
                             <tr>
                                 <th style={{ padding: '12px', fontSize: 'var(--font-size-sm)' }}>ID</th>
+                                <th style={{ padding: '12px', fontSize: 'var(--font-size-sm)' }}>Image</th>
                                 <th style={{ padding: '12px', fontSize: 'var(--font-size-sm)' }}>Location</th>
                                 <th style={{ padding: '12px', fontSize: 'var(--font-size-sm)' }}>Actual</th>
                                 <th style={{ padding: '12px', fontSize: 'var(--font-size-sm)' }}>Expected</th>
@@ -51,6 +82,9 @@ const DataView = () => {
                             {scans?.map(scan => (
                                 <tr key={scan.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                                     <td style={{ padding: '12px' }}>{scan.id}</td>
+                                    <td style={{ padding: '12px' }}>
+                                        <ImageCell image={scan.image} fallback={boxesImage} />
+                                    </td>
                                     <td style={{ padding: '12px' }}>{scan.location}</td>
                                     <td style={{ padding: '12px' }}>{scan.actualCount}</td>
                                     <td style={{ padding: '12px' }}>{scan.expectedCount}</td>

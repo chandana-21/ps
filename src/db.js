@@ -3,7 +3,7 @@ import Dexie from 'dexie';
 export const db = new Dexie('SmartStockDB');
 
 db.version(4).stores({
-    scans: '++id, location, type, status, actualCount, expectedCount, timestamp', // Primary key and indexed props
+    scans: '++id, location, type, status, actualCount, expectedCount, timestamp, image', // Primary key and indexed props
     issues: '++id, priority, location, expected, expectedQty, actual, actualQty, date, status'
 }).upgrade(tx => {
     // Remove title from issues

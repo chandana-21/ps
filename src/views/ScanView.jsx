@@ -9,6 +9,8 @@ const ScanView = () => {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [processedImageUrl, setProcessedImageUrl] = useState(null);
     const [analysisResult, setAnalysisResult] = useState(null);
+    const [location, setLocation] = useState('');
+    const [inventoryType, setInventoryType] = useState('Boxed Inventory (Labeled)');
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -45,6 +47,17 @@ const ScanView = () => {
             setProcessedImageUrl(`http://localhost:8000${data.annotated_image_url}`);
             setAnalysisResult(data.analysis);
 
+            // Save to database
+            await db.scans.add({
+                location: location || 'Unknown Location',
+                type: inventoryType,
+                actualCount: data.analysis.count_objects,
+                expectedCount: data.analysis.count_objects, // Assuming verified for now
+                status: 'Verified',
+                timestamp: new Date().toISOString(),
+                image: selectedImage // Storing the file object (Blob)
+            });
+
         } catch (error) {
             console.error('Failed to process scan:', error);
             alert(`Failed to process scan: ${error.message}`);
@@ -78,7 +91,12 @@ const ScanView = () => {
                     </p>
                 </div>
 
-                <ScanForm />
+                <ScanForm
+                    location={location}
+                    onLocationChange={setLocation}
+                    type={inventoryType}
+                    onTypeChange={setInventoryType}
+                />
 
                 {/* Image Upload Section */}
                 <div style={{ marginTop: 'var(--spacing-lg)', textAlign: 'center' }}>
